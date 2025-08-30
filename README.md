@@ -1,8 +1,9 @@
-# kuda AI - 智能笔试辅助系统 (0.020v)
+# 快答AI - 智能笔试辅助系统 (终版)
 
 [![Vue.js](https://img.shields.io/badge/Vue.js-3.x-4FC08D?style=for-the-badge&logo=vue.js)](https://vuejs.org/)
 [![Node.js](https://img.shields.io/badge/Node.js-20.x-339933?style=for-the-badge&logo=node.js)](https://nodejs.org/)
 [![Electron](https://img.shields.io/badge/Electron-37.x-47848F?style=for-the-badge&logo=electron)](https://www.electronjs.org/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15.x-336791?style=for-the-badge&logo=postgresql)](https://www.postgresql.org/)
 [![Socket.IO](https://img.shields.io/badge/Socket.IO-4.x-010101?style=for-the-badge&logo=socket.io)](https://socket.io/)
 [![Prisma](https://img.shields.io/badge/Prisma-6.x-2D3748?style=for-the-badge&logo=prisma)](https://www.prisma.io/)
 
@@ -33,17 +34,44 @@
 └── 📂 kuai-da-ai-desktop/     # 桌面客户端 (Electron + Vue)
 ```
 
-## 🛠️ 技术栈 (Tech Stack)
+## 🛠️ 环境与技术栈
 
-### 软件环境
+### 1. 必需软件安装
 
-*   **Node.js**: `v20.x` (LTS 长期支持版) - 必须！
-*   **Git**: 用于版本控制。
-*   **pnpm**: `v10.x` 或更高版本，用于 `kuai-da-ai-desktop` 项目的依赖管理。
-*   **PostgreSQL**: `v15.x` 或更高版本，作为项目数据库。
-*   **V2Ray / Clash**: (可选，但强烈推荐) 用于解决网络问题，确保能稳定访问 Gemini API。
+在开始之前，请确保您的开发环境中安装了以下所有软件。
 
-### 核心库与框架
+| 软件 | 版本推荐 | 安装指南 |
+| :--- | :--- | :--- |
+| 🐘 **PostgreSQL** | `15.x` 或更高 | 数据库服务。访问 [官网下载](https://www.postgresql.org/download/)，安装时请务必**记下您为 `postgres` 用户设置的密码**。 |
+| 🟩 **Node.js (通过 NVM)** | `v20.x` (LTS) | JavaScript 运行环境。**强烈推荐使用 NVM 安装**以管理多版本。 |
+| 📦 **Git** | 最新版 | 版本控制工具。访问 [官网下载](https://git-scm.com/downloads)。 |
+| ⚡ **pnpm** | `v10.x` 或更高 | 高性能的包管理器。用于 `kuai-da-ai-desktop` 项目。 |
+| 🌐 **网络代理** | (可选) | V2Ray, Clash 等。确保能稳定访问 Google API。 |
+
+#### **通过 NVM (Node Version Manager) 安装 Node.js (推荐)**
+
+NVM 允许您轻松切换 Node.js 版本，避免环境冲突。
+
+1.  **安装 NVM for Windows**: 访问 [NVM-Windows GitHub](https://github.com/coreybutler/nvm-windows/releases) 并下载 `nvm-setup.zip` 进行安装。
+2.  **配置国内镜像 (加速下载)**:
+    ```bash
+    nvm node_mirror https://npmmirror.com/mirrors/node/
+    nvm npm_mirror https://npmmirror.com/mirrors/npm/
+    ```
+3.  **安装并使用 Node.js v20**:
+    ```bash
+    nvm install 20
+    nvm use 20
+    ```
+
+#### **安装 pnpm**
+
+在安装并切换到 Node.js v20 后，运行以下命令全局安装 pnpm：
+```bash
+npm install -g pnpm
+```
+
+### 2. 核心库与框架
 
 | 模块 | 主要技术栈 |
 | :--- | :--- |
@@ -51,7 +79,7 @@
 | **Web前端 (`/webapp`)** | `Vue.js 3`, `Vite`, `Vue Router`, `Pinia`, `Socket.IO-client`, `Axios` |
 | **桌面客户端 (`/desktop`)** | `Electron`, `Vue.js 3`, `TypeScript`, `Vite`, `Pinia`, `Socket.IO-client`, `Axios` |
 
-## 🚀 安装与配置指南
+## 🚀 项目安装与配置
 
 ### 第一步：克隆仓库
 
@@ -62,19 +90,13 @@ cd KuaiDa-AI
 
 ### 第二步：配置后端 (`kuai-da-ai-backend`)
 
-1.  **进入后端目录**:
-    ```bash
-    cd kuai-da-ai-backend
-    ```
-2.  **安装依赖**:
-    ```bash
-    npm install
-    ```
+1.  **进入目录**: `cd kuai-da-ai-backend`
+2.  **安装依赖**: `npm install`
 3.  **配置环境变量**:
     *   复制 `.env.example` 文件并重命名为 `.env`。
     *   修改 `.env` 文件，填入你的配置：
         ```env
-        # 数据库连接字符串 (本地PostgreSQL)
+        # 数据库连接字符串 (请将 YOUR_PASSWORD 替换为您安装 PostgreSQL 时设置的密码)
         DATABASE_URL="postgresql://postgres:YOUR_PASSWORD@localhost:5432/postgres"
 
         # 你的 Gemini API 密钥
@@ -83,32 +105,17 @@ cd KuaiDa-AI
         # JWT 密钥 (可以自定义一个复杂的随机字符串)
         JWT_SECRET="YOUR_CUSTOM_JWT_SECRET_KEY"
         ```
-4.  **应用数据库迁移**:
-    ```bash
-    npx prisma migrate dev --name init
-    ```
+4.  **应用数据库迁移**: `npx prisma migrate dev --name init`
 
 ### 第三步：配置 Web 前端 (`kuai-da-ai-webapp`)
 
-1.  **进入 Web 前端目录**:
-    ```bash
-    cd ../kuai-da-ai-webapp
-    ```
-2.  **安装依赖**:
-    ```bash
-    npm install
-    ```
+1.  **进入目录**: `cd ../kuai-da-ai-webapp`
+2.  **安装依赖**: `npm install`
 
 ### 第四步：配置桌面客户端 (`kuai-da-ai-desktop`)
 
-1.  **进入桌面客户端目录**:
-    ```bash
-    cd ../kuai-da-ai-desktop
-    ```
-2.  **安装依赖 (必须使用 pnpm)**:
-    ```bash
-    pnpm install
-    ```
+1.  **进入目录**: `cd ../kuai-da-ai-desktop`
+2.  **安装依赖 (必须使用 pnpm)**: `pnpm install`
 
 ## 🎮 运行指南
 
@@ -116,7 +123,7 @@ cd KuaiDa-AI
 
 ### 1. 启动后端服务 (终端 1)
 
-> **注意**: 如果你无法直接访问 Google API，请使用以下命令启动，并确保你的代理软件（如 V2Ray, Clash）已开启**全局+TUN模式**。
+> **注意**: 如果你无法直接访问 Google API，请确保你的代理软件（如 V2Ray, Clash）已开启**全局+TUN模式**，并使用以下命令启动。
 
 ```bash
 cd kuai-da-ai-backend
