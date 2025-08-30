@@ -1,4 +1,4 @@
-# 快答AI - 智能笔试辅助系统 (终版)
+# 快答AI - 智能笔试辅助系统 (kuda 0.020v)
 
 [![Vue.js](https://img.shields.io/badge/Vue.js-3.x-4FC08D?style=for-the-badge&logo=vue.js)](https://vuejs.org/)
 [![Node.js](https://img.shields.io/badge/Node.js-20.x-339933?style=for-the-badge&logo=node.js)](https://nodejs.org/)
